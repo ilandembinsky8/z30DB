@@ -1,0 +1,73 @@
+package lib;
+import java.sql.*;
+import java.util.HashMap;
+import com.mysql.jdbc.Connection;
+
+public class ConnectivityTest {
+	public static void main(String [] args) throws ClassNotFoundException, SQLException
+	{
+		// JDBC driver name and database URL
+		final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://libarab.crbu6i1ygais.eu-central-1.rds.amazonaws.com:3306/libArabDB" ;
+	//	jdbc:mysql://myRDS.cuc1hj6ibtko.eu-west-1.rds.amazonaws.com:3306/myDB?" +
+       //     "user=MyUSER&password=MyPASSWORD"
+		java.sql.Connection con=null;
+		Statement stmt = null;
+		
+		// Register JDBC Driver
+		Class.forName("com.mysql.jdbc.Driver"); //register with DriverManager
+		
+		
+		
+		//Open Connection
+		try{
+		System.out.println("Connecting to database....");
+		con = DriverManager.getConnection(url, "MasterDB", "Master!!");
+		}
+		catch (SQLException e) {
+			System.out.println("Connection Failed! Check output console");
+			e.printStackTrace();
+			return;
+		}
+		HashMap<String, String> conditions = new HashMap();
+		conditions.put("username", "mothana");
+		conditions.put("password", "123456");
+		//Execute a query
+		System.out.println("Creating database....");
+		ExistQuery Q = new ExistQuery("user",conditions);
+		
+		String answer= Q.runLoginSearch(con, "mothana@amaria", "123456");
+		String answerB= Q.runLoginSearch(con, "mothana@amaria", "1");
+		String answerC= Q.runLoginSearch(con, "bc", "123456");
+		
+		System.out.println("right username and right password "+answer);
+		System.out.println("right username and wrong password "+answerB);
+		System.out.println("wrong username and wrong password "+answerC);
+//		stmt= con.createStatement();
+//
+//		User mothana = null;
+//		
+//		ResultSet rs = stmt.executeQuery("select * from user");
+////		if (!rs.next())
+////			System.out.println("result set empty!!!");
+////		else
+//			while (rs.next()){
+//				System.out.println("1");
+//			mothana = new User(rs.getInt("userID"), rs.getString("email"), rs.getString("password"),
+//					rs.getString("firstName"), rs.getString("lastName"), null,
+//					rs.getDate("birthday"), rs.getBoolean("wantToPlay"),rs.getInt("userTypeID"),
+//					rs.getInt("curatorRequest"));
+//			System.out.println(rs.getInt("userID")+rs.getString("email"));
+//		}
+//		
+//		
+//		rs.close();
+//		stmt.close();
+// 
+//		if (mothana != null){
+//		System.out.println(mothana.getEmail()+" "+mothana.getFirstName()+" "+ mothana.getLastName()+" "+
+//				mothana.getUserID());
+//		}
+//		else System.out.println("finished");
+	}
+}
