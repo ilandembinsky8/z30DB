@@ -6,6 +6,9 @@ public class User {
 	public static final int student = 1;
 	public static final int curator = 2;
 	public static final int admin = 3;
+	public static final int curatorNo = 1;
+	public static final int curatorPending = 2;
+	public static final int curatorYes = 3;
 	private int userID;
 	private String email;
 	private String password;
@@ -18,7 +21,7 @@ public class User {
 	private int curatorRequest;
 	
 	public User(int userID, String email, String password, String firstName, String lastName, genderType enteredGender,
-			Date birthDate, boolean wantToPlay, int userTypeID, int curatorRequest) {
+			Date birthDate, boolean wantToPlay, int curatorRequest) {
 		super();
 		this.userID = userID;
 		this.email = email;
@@ -31,7 +34,20 @@ public class User {
 		this.userTypeID = student;
 		this.curatorRequest = curatorRequest;
 	}
-
+	public User(int userID, String email, String password, String firstName, String lastName, genderType enteredGender,
+			Date birthDate, boolean wantToPlay, int userTypeID, int curatorRequest) {
+		super();
+		this.userID = userID;
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = enteredGender;
+		this.birthDate = birthDate;
+		this.wantToPlay = wantToPlay;
+		this.userTypeID = userTypeID;
+		this.curatorRequest = curatorRequest;
+	}
 	public int getUserID() {
 		return userID;
 	}

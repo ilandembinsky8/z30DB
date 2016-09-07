@@ -1,7 +1,9 @@
 package lib;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
@@ -19,12 +21,15 @@ public class ExistQuery extends SQLCommand{
 			this.conditions = conditions;
 		}
 
-		public String runLoginSearch(java.sql.Connection con, String username, String password) throws SQLException{
+		public ArrayList<String> runLoginSearch(java.sql.Connection con, String username, String password) throws SQLException{
 //			PreparedStatement usernameStatement =con.prepareStatement("SELECT * from user WHERE  email = ?");
 //			usernameStatement.setString(1, username);
 			PreparedStatement passwordStatement =con.prepareStatement("SELECT * from user WHERE  email = ? AND password = ?");
 			passwordStatement.setString(1, username);
 			passwordStatement.setString(2, password);
+			ArrayList<String> replyList = new ArrayList<String>();
+			String replyClient = "fail";
+			String userNameReply ="";
 //			ResultSet rs = usernameStatement.executeQuery();
 //			if (!rs.next())
 //				return 1;
@@ -36,22 +41,48 @@ public class ExistQuery extends SQLCommand{
 //					return 3;
 //			}
 			ResultSet rs = passwordStatement.executeQuery();
-			if (!rs.next())
-				return "Incorrect Email or Password";
+			//in case no match was found
+			if (!rs.next()){
+				replyList.add("Incorrect Email or Password");
+				replyList.add(replyClient);
+				replyList.add("");
+				return replyList;
+			}
 			else{
 				User userA = new User(rs.getInt("userID"), rs.getString("email"), rs.getString("password"),
 						rs.getString("firstName"), rs.getString("lastName"), genderType.valueOf(rs.getString("gender")),
 						rs.getDate("birthday"), rs.getBoolean("wantToPlay"),rs.getInt("userTypeID"),
 						rs.getInt("curatorRequest"));
+				userNameReply = userA.getFirstName()+" "+userA.getLastName();
+				replyClient = "success";
 				if (userA.getUserTypeID() == 1) {	
-					if (userA.getCuratorRequest() == 2)
-						return "Curator not approved User";
-					else return "Regular user";
+					if (userA.getCuratorRequest() == 2){
+						replyList.add("Curator not approved User");
+						replyList.add(replyClient);
+						replyList.add(userNameReply);
+						return replyList;
+					}
+					else {
+						replyList.add("Regular user");
+						replyList.add(replyClient);
+						replyList.add(userNameReply);
+						return replyList;
+					}
 				}
-				else if (userA.getUserTypeID() == 2)
-					return "Curator approved User";
+				else if (userA.getUserTypeID() == 2){
+					replyList.add("Curator approved User");
+					replyList.add(replyClient);
+					replyList.add(userNameReply);
+					return replyList;
+				}
+				else if (userA.getUserTypeID() ==3 ){
+					replyList.add("Admin");
+					replyList.add(replyClient);
+					replyList.add(userNameReply);
+					return replyList;
+				}
 			}
-			return "Success";
+			return null;
 		
 		}
 		

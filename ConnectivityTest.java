@@ -1,10 +1,13 @@
 package lib;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import com.mysql.jdbc.Connection;
 
 public class ConnectivityTest {
-	public static void main(String [] args) throws ClassNotFoundException, SQLException
+	public static void main(String [] args) throws ClassNotFoundException, SQLException, ParseException
 	{
 		// JDBC driver name and database URL
 		final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -35,22 +38,33 @@ public class ConnectivityTest {
 		//Execute a query
 		System.out.println("Creating database....");
 		ExistQuery Q = new ExistQuery("user",conditions);
+		String reply ="";
+		String name = "";
 		
-		String answer= Q.runLoginSearch(con, "mothana@amaria", "123456");
-		String answerB= Q.runLoginSearch(con, "mothana@amaria", "1");
-		String answerC= Q.runLoginSearch(con, "bc", "123456");
+//		ArrayList<String> answer= Q.runLoginSearch(con, "mothana@amaria", "123456");
+//		ArrayList<String> answerB= Q.runLoginSearch(con, "mothana@amaria", "1");
+		ArrayList<String> answerC= Q.runLoginSearch(con, "c@c", "a");
 		
-		System.out.println("right username and right password "+answer);
-		System.out.println("right username and wrong password "+answerB);
-		System.out.println("wrong username and wrong password "+answerC);
+//		System.out.println("right username and right password "+answer);
+//		System.out.println("right username and wrong password "+answerB);
+		System.out.println(answerC);
+		
+//		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd"); 
+//		String input = "1983-06-11";
+//		lib.genderType gen = genderType.m;
+//		java.util.Date date = ft.parse(input);
+//		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+//		InsertQuery A = new InsertQuery("user");
+//		boolean answer2 = A.SignUp(con,"charlie", "a", "b", "c", gen,sqlDate , true, 1, 1);
+//		System.out.println("the answer to the signup function is "+answer2);
 //		stmt= con.createStatement();
 //
 //		User mothana = null;
 //		
 //		ResultSet rs = stmt.executeQuery("select * from user");
-////		if (!rs.next())
-////			System.out.println("result set empty!!!");
-////		else
+//		if (!rs.next())
+//			System.out.println("result set empty!!!");
+//		else
 //			while (rs.next()){
 //				System.out.println("1");
 //			mothana = new User(rs.getInt("userID"), rs.getString("email"), rs.getString("password"),
