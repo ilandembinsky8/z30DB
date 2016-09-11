@@ -41,13 +41,29 @@ public class ConnectivityTest {
 		String reply ="";
 		String name = "";
 		
-//		ArrayList<String> answer= Q.runLoginSearch(con, "mothana@amaria", "123456");
-//		ArrayList<String> answerB= Q.runLoginSearch(con, "mothana@amaria", "1");
-		ArrayList<String> answerC= Q.runLoginSearch(con, "c@c", "a");
+		ReturnAllUsers r = new ReturnAllUsers();
+		ReturnAllCurators g = new ReturnAllCurators();
 		
-//		System.out.println("right username and right password "+answer);
-//		System.out.println("right username and wrong password "+answerB);
+		ArrayList<String> answer= Q.runLoginSearch(con, "mothana@amaria", "123456");
+		ArrayList<String> answerB= Q.runLoginSearch(con, "eyal@rosenbaum", "123456");
+		ArrayList<String> answerC= Q.runLoginSearch(con, "c@c", "a");
+		ArrayList<String> answerD= Q.runLoginSearch(con, "c@a", "a");
+		ArrayList<User> answerE = r.returnAll(con);
+		ArrayList<User> answerF = g.returnAll(con);
+		
+		System.out.println(answer);
+		System.out.println(answerB);
 		System.out.println(answerC);
+		System.out.println(answerD);
+		System.out.println("All of the users:");
+		for (User user:answerE){
+			System.out.println(user.getFirstName()+" "+user.getLastName());
+		}
+		System.out.println("All of the curators:");
+		for (User user:answerF){
+			System.out.println(user.getFirstName()+" "+user.getLastName());
+		}
+		
 		
 //		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd"); 
 //		String input = "1983-06-11";

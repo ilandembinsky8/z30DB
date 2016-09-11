@@ -12,12 +12,10 @@ public class ExistQuery extends SQLCommand{
 
 	
 		private String requestedField;
-		private String tableName;
 		private HashMap<String, String> conditions = new HashMap();
 		
 		public ExistQuery(String tableName, HashMap<String, String> conditions) {
 			super("exist");
-			this.tableName = tableName;
 			this.conditions = conditions;
 		}
 
@@ -94,13 +92,6 @@ public class ExistQuery extends SQLCommand{
 			this.requestedField = requestedField;
 		}
 
-		public String getTableName() {
-			return tableName;
-		}
-
-		public void setTableName(String tableName) {
-			this.tableName = tableName;
-		}
 
 		public HashMap<String, String> getConditions() {
 			return conditions;
