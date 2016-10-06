@@ -31,15 +31,15 @@ public class ConnectivityTest {
 			return;
 		}
 		System.out.println("Creating database....");
-		// UpdateCommand a = new UpdateCommand();
-		// System.out.println(a.addQuestion(con, "dror@d", "qus", "ans1",
-		// "ans2", "ans3", "ans4", "123","yosi","history"));
+		 UpdateCommand a = new UpdateCommand();
+		 System.out.println(a.addQuestion(con, "dror@d", "qus", "ans1",
+		 "ans2", "ans3", "ans4", "123","yosi","history"));
 		SelectCommand b = new SelectCommand();
 		// ArrayList<SearchItem> a = b.search(con, 0);
 		// for (int i=0; i< a.size();i++)
 		// System.out.println("name: "+a.get(i));
-		ArrayList<String> a = b.returnTop10(con, "dror@d");
-		System.out.println(a);
+	//	ArrayList<String> a = b.returnTop10(con, "dror@d");
+	//	System.out.println(a);
 
 
 			

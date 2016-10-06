@@ -22,6 +22,13 @@ public class User {
 	private int curatorRequest;
 	private ArrayList<Bibiliography> userBibiliography;
 	
+	
+	
+	public User(int userID) {
+		super();
+		this.userID = userID;
+	}
+
 	public User(int userID, String email, String password, String firstName, String lastName, genderType enteredGender,
 			Date birthDate, boolean wantToPlay, int curatorRequest) {
 		super();

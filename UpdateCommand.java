@@ -337,46 +337,47 @@ public class UpdateCommand extends SQLCommand {
 		int rs = d.executeUpdate();
 		return true;
 	}
-
-	public boolean addItem(java.sql.Connection con, String username,
-			String bookID, TypeOfResource type, String pageLink, int pageNum,
-			String desc, int bibID) throws SQLException {
+	
+	
+	public boolean addFavorite(java.sql.Connection con, String username, String bookID, TypeOfResource type,
+			String pageLink, int pageNum, String desc, int bibID) throws SQLException {
 
 		SelectCommand helper = new SelectCommand();
 		int userID = helper.returnUserByUsername(con, username).getUserID();
 		Statement stmt = con.createStatement();
-		String insert = "INSERT INTO `libArabDB`.`favorite` (`userID`, `bookID`, `type`, `pageLink`, `pageNumber`,"
-				+ " `description`, `bibliography_idbibliographyID`)"
-				+ " VALUES ('"
-				+ userID
-				+ "', '"
-				+ bookID
-				+ "', '"
-				+ type
-				+ "', '"
-				+ pageLink
-				+ "', '"
-				+ pageNum
-				+ "', '"
-				+ desc
-				+ "', '"
-				+ bibID + "')";
+		if (type == TypeOfResource.MAP || type == TypeOfResource.SHEET) {
+			pageNum = 1;
+		}
+		String insert = "INSERT INTO libArabDB.favorite (userID,bookID,type,pageLink,pageNumber,"
+				+ "description, bibliography_idbibliographyID) VALUES ('" + userID + "', '" + bookID + "', " + "'"
+				+ type + "', '" + pageLink + "', '" + pageNum + "', '" + desc + "', '" + bibID + "')";
+
 		stmt.executeUpdate(insert);
-		return true;
-	}
 
-	public boolean removeItem(java.sql.Connection con, String username,
-			String bookID, int bibID) throws SQLException {
+		if (helper.favExists(con, username, bookID, pageNum, bibID))
+			return true;
+
+		return false;
+
+	}
+	
+     
+	public boolean removeFavorite(java.sql.Connection con, String username, String bookID, int pageNum, int bibID)
+			throws SQLException {
 
 		SelectCommand helper = new SelectCommand();
 		int userID = helper.returnUserByUsername(con, username).getUserID();
 		Statement stmt = con.createStatement();
-		String delete = "delete from libArabDB.favorite " + "where bookID = '"
-				+ bookID + "' and userID = '" + userID
-				+ "' and bibliography_idbibliographyID = '" + bibID + "'";
+		String delete = "delete from libArabDB.favorite " + "where bookID = '" + bookID + "' and pageNumber='" + pageNum
+				+ "' and userID = '" + userID + "' and bibliography_idbibliographyID = '" + bibID + "'";
 		stmt.executeUpdate(delete);
-		return true;
+
+		return !(helper.favExists(con, username, bookID, pageNum, bibID));
 	}
+
+	
+
+         
 
 	public boolean updateDesc(java.sql.Connection con, String username,
 			int bibID, String userDesc) throws SQLException {

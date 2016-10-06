@@ -704,7 +704,7 @@ public class SelectCommand extends SQLCommand {
 
 	}
 
-	public ArrayList<Favorite> getBib(java.sql.Connection con, String userID,
+/*	public ArrayList<Favorite> getBib(java.sql.Connection con, String userID,
 			int BibId) throws SQLException {
 		ArrayList<Favorite> allFavOfBib = new ArrayList<Favorite>();
 		SelectCommand sc = new SelectCommand();
@@ -729,9 +729,206 @@ public class SelectCommand extends SQLCommand {
 		}
 		return allFavOfBib;
 
+	}*/
+	
+	public ArrayList<String> returnTitleList(java.sql.Connection con, int fromYear, int toYear , int numOfTitles) throws SQLException 
+	{
+
+			ArrayList<String> returnTitlesBySearch = new ArrayList<String>();
+		//	java.sql.Statement returnAuthorsState = con.createStatement();
+
+			if (fromYear == 0) {
+				if (toYear == 0) /** return all years **/
+				{
+					if (numOfTitles == 0) {
+						PreparedStatement returnTitleStatement = con
+								.prepareStatement("select search.title , count(*) as numOfSperTitle "
+										+ " from libArabDB.search " + "group by title " + "order by numOfSperTitle DESC");
+						ResultSet rs = returnTitleStatement.executeQuery();
+
+						while (rs.next()) {
+							String title = rs.getString("title");
+							String numOfTitle = rs.getString("numOfSperTitle");
+							returnTitlesBySearch.add(title);
+							returnTitlesBySearch.add(numOfTitle);
+						}
+						return returnTitlesBySearch;
+					} else {
+						while (numOfTitles != 0) {
+							PreparedStatement returnTitleStatement = con
+									.prepareStatement("select search.title , count(*) as numOfSperTitle "
+											+ " from libArabDB.search " + "group by title " + "order by numOfSperTitle DESC");
+							ResultSet rs = returnTitleStatement.executeQuery();
+
+							while (rs.next() & numOfTitles != 0) {
+								String title = rs.getString("title");
+								String numOfTitle = rs.getString("numOfSperTitle");
+								returnTitlesBySearch.add(title);
+								returnTitlesBySearch.add(numOfTitle);
+								numOfTitles--;
+							}
+							return returnTitlesBySearch;
+
+						}
+
+					}
+				} else { /** fromYear is zero , toYear is x (less than x ) **/
+					if (numOfTitles == 0) {
+						PreparedStatement returnTitleStatement = con
+								.prepareStatement("select search.title , count(*) as numOfSperTitle "
+										+ " from libArabDB.search " + "where extract(year from searchDate) <= ?   "
+										+ "group by title " + "order by numOfSperTitle DESC");
+
+						returnTitleStatement.setInt(1, toYear);
+
+						ResultSet rs = returnTitleStatement.executeQuery();
+
+						while (rs.next()) {
+							String title = rs.getString("title");
+							String numOfTitle= rs.getString("numOfSperTitle");
+							returnTitlesBySearch.add(title);
+							returnTitlesBySearch.add(numOfTitle);
+						}
+						return returnTitlesBySearch;
+					} else {
+						while (numOfTitles != 0) {
+							PreparedStatement returnTitleStatement = con
+									.prepareStatement("select search.title , count(*) as numOfSperTitle "
+											+ " from libArabDB.search " + "where extract(year from searchDate) <= ?   "
+											+ "group by title " + "order by numOfSperTitle DESC");
+
+							returnTitleStatement.setInt(1, toYear);
+							ResultSet rs = returnTitleStatement.executeQuery();
+
+							while (rs.next() & numOfTitles != 0) {
+								String title = rs.getString("title");
+								String numOfTitle = rs.getString("numOfSperTitle");
+								returnTitlesBySearch.add(title);
+								returnTitlesBySearch.add(numOfTitle);
+								numOfTitles--;
+							}
+							return returnTitlesBySearch;
+
+						}
+
+					}
+				}
+			}
+			if (toYear == 0) { /** from year x to inf **/
+				if (numOfTitles == 0) {
+					PreparedStatement returnTitlesStatement = con
+							.prepareStatement("select search.title , count(*) as numOfSperTitle " + " from libArabDB.search "
+									+ "where extract(year from searchDate) >= ?   " + "group by title "
+									+ "order by numOfSperTitle DESC");
+
+					returnTitlesStatement.setInt(1, fromYear);
+
+					ResultSet rs = returnTitlesStatement.executeQuery();
+
+					while (rs.next()) {
+						String title = rs.getString("title");
+						String numOfTitle = rs.getString("numOfSperTitle");
+						returnTitlesBySearch.add(title);
+						returnTitlesBySearch.add(numOfTitle);
+					}
+					return returnTitlesBySearch;
+				} else {
+					while (numOfTitles != 0) {
+						PreparedStatement returnTitlesStatement = con
+								.prepareStatement("select search.title , count(*) as numOfSperTitle "
+										+ " from libArabDB.search " + "where extract(year from searchDate) >= ?   "
+										+ "group by title " + "order by numOfSperTitle DESC");
+
+						returnTitlesStatement.setInt(1, fromYear);
+						ResultSet rs = returnTitlesStatement.executeQuery();
+
+						while (rs.next() & numOfTitles != 0) {
+							String title = rs.getString("title");
+							String numOfTitle = rs.getString("numOfSperTitle");
+							returnTitlesBySearch.add(title);
+							returnTitlesBySearch.add(numOfTitle);
+							numOfTitles--;
+						}
+						return returnTitlesBySearch;
+
+					}
+
+				}
+			} else { /** from year and to year defined **/
+				if (numOfTitles == 0) {
+					PreparedStatement returnTitlesStatement = con
+							.prepareStatement("select search.title , count(*) as numOfSperTitle " + " from libArabDB.search "
+									+ "where extract(year from searchDate) between ? AND ?  " + "group by title "
+									+ "order by numOfSperTitle DESC");
+
+					returnTitlesStatement.setInt(1, fromYear);
+					returnTitlesStatement.setInt(2, toYear);
+					ResultSet rs = returnTitlesStatement.executeQuery();
+
+					while (rs.next()) {
+						String title = rs.getString("title");
+						String numOfTitle = rs.getString("numOfSperTitle");
+						returnTitlesBySearch.add(title);
+						returnTitlesBySearch.add(numOfTitle);
+					}
+					return returnTitlesBySearch;
+				} else {
+					while (numOfTitles != 0) {
+						PreparedStatement returnTitlesStatement = con.prepareStatement(
+								"select search.title , count(*) as numOfSperTitle " + " from libArabDB.search "
+										+ " where extract(year from searchDate) between ? AND ? " + "group by title "
+										+ "order by numOfSperTitle DESC");
+
+						returnTitlesStatement.setInt(1, fromYear);
+						returnTitlesStatement.setInt(2, toYear);
+						ResultSet rs = returnTitlesStatement.executeQuery();
+
+						while (rs.next() & numOfTitles != 0) {
+							String title = rs.getString("title");
+							String numOfTitle = rs.getString("numOfSperTitle");
+							returnTitlesBySearch.add(title);
+							returnTitlesBySearch.add(numOfTitle);
+							numOfTitles--;
+						}
+						return returnTitlesBySearch;
+
+					}
+
+				}
+			}
+			return returnTitlesBySearch;
+		
+		
+		
+		
 	}
+	
+	public boolean favExists(java.sql.Connection con, String username, String bookID, int pageNum, int bibID)
+	throws SQLException {
+SelectCommand helper = new SelectCommand();
+int userID = helper.returnUserByUsername(con, username).getUserID();
+if (userID == -1)
+	return false;
+
+PreparedStatement userfavorite = con.prepareStatement(
+		"select * FROM libArabDB.favorite "
+				+ "WHERE userID=? and bookID=?"
+				+ "AND pageNumber =? and bibliography_idbibliographyID=?");
+userfavorite.setString(1, username);
+userfavorite.setString(2, bookID);
+userfavorite.setInt(3, pageNum);
+userfavorite.setInt(4, bibID);
+ResultSet rs = userfavorite.executeQuery();
+if (!rs.next())
+	return true;
+
+return false; 
 
 }
+
+}
+
+
 // public boolean existSearch (java.sql.Connection con, int id) throws
 // SQLException{
 // PreparedStatement passwordStatement = con.prepareStatement("select * from

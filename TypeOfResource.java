@@ -1,5 +1,5 @@
 package lib;
 
 public enum TypeOfResource {
-	BOOK , MAP , HANDWRITING , MAGAZINE
+	BOOK , MAP , HANDWRITING , MAGAZINE , SHEET
 }
