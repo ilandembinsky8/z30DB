@@ -1,4 +1,5 @@
 package lib;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -17,8 +18,9 @@ public class User {
 	private genderType gender;
 	private Date birthDate;
 	private boolean wantToPlay;
-	private int userTypeID;
+	private String userType;
 	private int curatorRequest;
+	private ArrayList<Bibiliography> userBibiliography;
 	
 	public User(int userID, String email, String password, String firstName, String lastName, genderType enteredGender,
 			Date birthDate, boolean wantToPlay, int curatorRequest) {
@@ -31,11 +33,14 @@ public class User {
 		this.gender = enteredGender;
 		this.birthDate = birthDate;
 		this.wantToPlay = wantToPlay;
-		this.userTypeID = student;
+		this.userType = "Regular";
 		this.curatorRequest = curatorRequest;
+		this.userBibiliography = new ArrayList<Bibiliography>();
+		this.userBibiliography.add(new Bibiliography());
 	}
+	
 	public User(int userID, String email, String password, String firstName, String lastName, genderType enteredGender,
-			Date birthDate, boolean wantToPlay, int userTypeID, int curatorRequest) {
+			Date birthDate, boolean wantToPlay, String userType, int curatorRequest) {
 		super();
 		this.userID = userID;
 		this.email = email;
@@ -45,9 +50,21 @@ public class User {
 		this.gender = enteredGender;
 		this.birthDate = birthDate;
 		this.wantToPlay = wantToPlay;
-		this.userTypeID = userTypeID;
+		this.userType = userType;
 		this.curatorRequest = curatorRequest;
+		this.userBibiliography = new ArrayList<Bibiliography>();
+		this.userBibiliography.add(new Bibiliography());
 	}
+	
+
+	public ArrayList<Bibiliography> getUserBibiliography() {
+		return userBibiliography;
+	}
+
+	public void setUserBibiliography(ArrayList<Bibiliography> userBibiliography) {
+		this.userBibiliography = userBibiliography;
+	}
+
 	public int getUserID() {
 		return userID;
 	}
@@ -112,14 +129,12 @@ public class User {
 		this.wantToPlay = wantToPlay;
 	}
 
-	public int getUserTypeID() {
-		return userTypeID;
+	public String getUserType() {
+		return userType;
 	}
-
-	public void setUserTypeID(int userTypeID) {
-		this.userTypeID = userTypeID;
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
-
 	public int getCuratorRequest() {
 		return curatorRequest;
 	}
