@@ -40,7 +40,13 @@ public class ConnectivityTest {
 		// System.out.println("name: "+a.get(i));
 	//	ArrayList<String> a = b.returnTop10(con, "dror@d");
 	//	System.out.println(a);
-
+		ArrayList<Favorite> myfavs=b.getfavOfBib(con, "cat@root", TypeOfResource.BOOK, 0);
+		for ( Favorite fv:myfavs)
+			System.out.println(fv);
+            
+		boolean addthis=a.addFavorite(con, "cat@root", "book233", TypeOfResource.BOOK, "my@book", 4, "mydesc", 0);
+		System.out.println("priiiiiiiiiint this");
+		System.out.println(addthis);
 
 			
 	}

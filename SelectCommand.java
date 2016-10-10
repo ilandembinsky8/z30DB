@@ -1,12 +1,12 @@
 package lib;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import org.omg.CORBA.Request;
 
 public class SelectCommand extends SQLCommand {
 
@@ -16,6 +16,7 @@ public class SelectCommand extends SQLCommand {
 	private ArrayList<String> where;
 	private String query = null;
 
+//  Default constructor for SelectCommand
 	public SelectCommand() {
 		super("select");
 		this.column = null;
@@ -24,6 +25,8 @@ public class SelectCommand extends SQLCommand {
 		this.where = null;
 	}
 
+//  Constructor for SelectCommand class
+//  parameters: column -- maybe delete????
 	public SelectCommand(ArrayList<String> column, String tableName,
 			ArrayList<String> joins, ArrayList<String> where) {
 		super("select");
@@ -32,6 +35,14 @@ public class SelectCommand extends SQLCommand {
 		this.joins = joins;
 		this.where = where;
 	}
+
+/**
+ * 
+ * @param con - connection to server
+ * @param email - user's email which is also username
+ * @return true if user exists in database, otherwise return false
+ * @throws SQLException
+ */
 
 	public boolean userExists(java.sql.Connection con, String email)
 			throws SQLException {
@@ -46,6 +57,12 @@ public class SelectCommand extends SQLCommand {
 		}
 	}
 
+/**
+ * @param con - connection to server
+ * @param GamerID - user's id in database
+ * @return true - if user exists in gamers table in database, otherwise return false
+ * @throws SQLException
+ */
 	public boolean gamerExists(java.sql.Connection con, int GamerID)
 			throws SQLException {
 		PreparedStatement gamerExist = con
@@ -58,7 +75,12 @@ public class SelectCommand extends SQLCommand {
 			return true;
 		}
 	}
-
+/**
+ * @param con - connection to server
+ * @param username - relvant User's username
+ * @return User - relevant user if the username exist in databse, otherwise return null
+ * @throws SQLException
+ */
 	public User returnUserByUsername(java.sql.Connection con, String username)
 			throws SQLException {
 		PreparedStatement passwordStatement = con
@@ -82,6 +104,12 @@ public class SelectCommand extends SQLCommand {
 		return result;
 	}
 
+/**
+* @param con - connection to server
+* @param n - number
+* @return ArrayList of users. if n= 0 return all users, otherwise return first n users from database
+* @throws SQLException
+*/
 	public ArrayList<User> returnAllUsers(java.sql.Connection con, int n)
 			throws SQLException {
 
@@ -119,6 +147,15 @@ public class SelectCommand extends SQLCommand {
 		return all;
 	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @param bibID - bibliography id
+ * @param username  - user with bibliography's username
+ * @param newName - bibliography name
+ * @return true - if the bibliographt exists in database, or false otherwise
+ * @throws SQLException
+ */
 	public boolean isExistBibliography(java.sql.Connection con, int bibID,
 			String username, String newName) throws SQLException {
 
@@ -136,6 +173,13 @@ public class SelectCommand extends SQLCommand {
 			return true;
 
 	}
+	
+/**
+ * 
+ * @param con - connection to server
+ * @return a list of all users who have an open unapproved request to become curators, or, if there are no such users returns null
+ * @throws SQLException
+ */
 
 	public ArrayList<User> returnAllCuratorsPending(java.sql.Connection con)
 			throws SQLException {
@@ -158,6 +202,13 @@ public class SelectCommand extends SQLCommand {
 		}
 		return curatorPending;
 	}
+	
+/**
+ * 
+ * @param con - connection to server
+ * @return all users which are curators from database, null if there are no curators in databse
+ * @throws SQLException
+ */
 
 	public ArrayList<User> returnAllCurators(java.sql.Connection con)
 			throws SQLException {
@@ -184,13 +235,16 @@ public class SelectCommand extends SQLCommand {
 		return curator;
 	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @param username - username of user who tries to login
+ * @param password - password of user who tries to login
+ * @return list of strings - success or fail, name of user if exists and password was true, type of user if successful login
+ * @throws SQLException
+ */
 	public ArrayList<String> runLoginSearch(java.sql.Connection con,
 			String username, String password) throws SQLException {
-		// PreparedStatement usernameStatement =con.prepareStatement("SELECT *
-		// from user WHERE email = ?");
-		// usernameStatement.setString(1, username);
-		// PreparedStatement passwordStatement =con.prepareStatement("SELECT *
-		// from user WHERE email = ? AND password = ?");
 		PreparedStatement passwordStatement = con
 				.prepareStatement("select * from libArabDB.user inner join libArabDB.usertype"
 						+ " on user.userTypeID=usertype.userTypeID where email = ? AND password = ?");
@@ -199,16 +253,7 @@ public class SelectCommand extends SQLCommand {
 		ArrayList<String> replyList = new ArrayList<String>();
 		String replyClient = "fail";
 		String userNameReply = "";
-		// ResultSet rs = usernameStatement.executeQuery();
-		// if (!rs.next())
-		// return 1;
-		// else {
-		// rs = passwordStatement.executeQuery();
-		// if (!rs.next())
-		// return 2;
-		// else
-		// return 3;
-		// }
+		
 		ResultSet rs = passwordStatement.executeQuery();
 		// in case no match was found
 		if (!rs.next()) {
@@ -253,6 +298,13 @@ public class SelectCommand extends SQLCommand {
 
 	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @param numRecord - number of records to return
+ * @return a list of searches that were entered by users
+ * @throws SQLException
+ */
 	public ArrayList<SearchItem> search(java.sql.Connection con, int numRecord)
 			throws SQLException {
 
@@ -270,8 +322,7 @@ public class SelectCommand extends SQLCommand {
 						rs.getString("freeText"), rs.getInt("user_userID"),
 						rs.getInt("fromYear"), rs.getInt("toYear"));
 				all.add(search);
-				// System.out.println(" " + search.getAuthor() + " "
-				// +search.getTitle());
+				
 			}
 		} else {
 			while (rs.next() & numRecord != 0) {
@@ -282,13 +333,19 @@ public class SelectCommand extends SQLCommand {
 						rs.getString("freeText"), rs.getInt("user_userID"),
 						rs.getInt("fromYear"), rs.getInt("toYear"));
 				all.add(search);
-				// System.out.println(" " + search.getAuthor() + " "
-				// +search.getTitle());
 				--numRecord;
 			}
 		}
 		return all;
 	}
+	
+/**
+ * This method return value is determined by the id of the searches made, but data may not be accurate due to the table
+ * being previously dropped
+ * @param con - connection to server
+ * @return how many searches by users were made
+ * @throws SQLException
+ */
 
 	public int returnTopIDSearchTable(java.sql.Connection con)
 			throws SQLException {
@@ -303,6 +360,14 @@ public class SelectCommand extends SQLCommand {
 		return result;
 
 	}
+	
+/**
+ * 
+ * @param con - connection to server
+ * @param questionItemID - relevant item ID
+ * @return a list of questions which are related to relevant item from library
+ * @throws SQLException
+ */
 
 	public ArrayList<Question> returnQuestionsByItem(java.sql.Connection con,
 			String questionItemID) throws SQLException {
@@ -323,6 +388,12 @@ public class SelectCommand extends SQLCommand {
 		return result;
 	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @return list of items which have questions in quiz related to them
+ * @throws SQLException
+ */
 	public ArrayList<Item> returnItemsOfQuestions(java.sql.Connection con)
 			throws SQLException {
 
@@ -331,11 +402,18 @@ public class SelectCommand extends SQLCommand {
 		this.query = "SELECT * FROM libArabDB.question group by itemName";
 		ResultSet rs = statement.executeQuery(this.query);
 		while (rs.next()) {
-			result.add(new Item(rs.getString(10), rs.getString(9)));
+			result.add(new Item(rs.getString("itemName"), rs.getString("authorName")));
 		}
 		return result;
 	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @param email - username email
+ * @return a list of the top 10 gamers with score and their details as well as the requesting user's details
+ * @throws SQLException
+ */
 	public ArrayList<String> returnTop10(java.sql.Connection con, String email)
 			throws SQLException {
 		// array list that we should to return
@@ -405,27 +483,43 @@ public class SelectCommand extends SQLCommand {
 		return replyList;
 	}
 
-	public ArrayList<Favorite> getFavorites(java.sql.Connection con,
-			String email) throws SQLException {
-		// array list that we should to return
-		ArrayList<Favorite> replyList = new ArrayList<Favorite>();
-		PreparedStatement userfavorite = con
-				.prepareStatement("select * FROM libArabDB.favorite "
-						+ "INNER JOIN libArabDB.user ON libArabDB.favorite.userID = libArabDB.user.userID "
-						+ "WHERE libArabDB.user.email = ?");
-		userfavorite.setString(1, email);
-		ResultSet r = userfavorite.executeQuery();
-		while (r.next()) {
-			Favorite favorite = new Favorite(r.getInt("FavoriteID"),
-					r.getString("BookID"), r.getString("PageLink"),
-					r.getString("Description"), r.getInt("PageNumber"));
-			replyList.add(favorite);
-			System.out.println("" + favorite.getBookID() + " "
-					+ favorite.getDescription());
-		}
-		return replyList;
-	}
+///**
+// * 
+// * @param con
+// * @param email - user's username
+// * @return
+// * @throws SQLException
+// */
+//	public ArrayList<Favorite> getFavorites(java.sql.Connection con,
+//			String email) throws SQLException {
+//		// array list that we should to return
+//		ArrayList<Favorite> replyList = new ArrayList<Favorite>();
+//		PreparedStatement userfavorite = con
+//				.prepareStatement("select * FROM libArabDB.favorite "
+//						+ "INNER JOIN libArabDB.user ON libArabDB.favorite.userID = libArabDB.user.userID "
+//						+ "WHERE libArabDB.user.email = ?");
+//		userfavorite.setString(1, email);
+//		ResultSet r = userfavorite.executeQuery();
+//		while (r.next()) {
+//			Favorite favorite = new Favorite(r.getInt("FavoriteID"),
+//					r.getString("BookID"), r.getString("PageLink"),
+//					r.getString("Description"), r.getInt("PageNumber"));
+//			replyList.add(favorite);
+//			System.out.println("" + favorite.getBookID() + " "
+//					+ favorite.getDescription());
+//		}
+//		return replyList;
+//	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @param fromYear - search all items from year
+ * @param toYear - to year
+ * @param numOfAuthors  - number of authors to return
+ * @return list of authors by publication year range and number of authors. 
+ * @throws SQLException
+ */
 	public ArrayList<String> returnAuthorsList(java.sql.Connection con,
 			int fromYear, int toYear, int numOfAuthors) throws SQLException {
 
@@ -613,6 +707,14 @@ public class SelectCommand extends SQLCommand {
 		return returnAuthorsBySearch;
 	}
 
+/**
+ * 
+ * @param con - connection to server
+ * @param fromYear
+ * @param toYear
+ * @return list of numbers of resources by category based on year publication range
+ * @throws SQLException
+ */
 	public ArrayList<String> returnResourceList(java.sql.Connection con,
 			int fromYear, int toYear) throws SQLException {
 
@@ -731,6 +833,15 @@ public class SelectCommand extends SQLCommand {
 
 	}*/
 	
+/**
+ * 
+ * @param con - connection to server
+ * @param fromYear - year to search from
+ * @param toYear - year to search up to
+ * @param numOfTitles - number of titles to return
+ * @return list which contains number of searches per title by publication year range and number of titles to return in a descending order
+ * @throws SQLException
+ */
 	public ArrayList<String> returnTitleList(java.sql.Connection con, int fromYear, int toYear , int numOfTitles) throws SQLException 
 	{
 
@@ -903,7 +1014,7 @@ public class SelectCommand extends SQLCommand {
 		
 	}
 	
-	public boolean favExists(java.sql.Connection con, String username, String bookID, int pageNum, int bibID)
+	/*public boolean favExists(java.sql.Connection con, String username, String bookID, int pageNum, int bibID)
 	throws SQLException {
 SelectCommand helper = new SelectCommand();
 int userID = helper.returnUserByUsername(con, username).getUserID();
@@ -924,7 +1035,97 @@ if (!rs.next())
 
 return false; 
 
-}
+}*/
+	
+/**
+ * 
+ * @param con - connection to server
+ * @param username - username of the user which owns the bibliography
+ * @param bookID - favorite's bookId to search
+ * @param pageNum - favorite's page number in the book
+ * @param bibID - bibliography to search in ID
+ * @return true if favorite exist in the bibliography, or false otherwise
+ * @throws SQLException
+ */
+	public boolean favExists(java.sql.Connection con, String username, String bookID, int pageNum, int bibID)
+			throws SQLException {
+		SelectCommand helper = new SelectCommand();
+		int userID = helper.returnUserByUsername(con, username).getUserID();
+		if (userID == -1)
+			return false;
+
+		PreparedStatement userfavorite = con.prepareStatement("select * FROM libArabDB.favorite "
+				+ "WHERE userID=? and bookID=?" + "AND pageNumber =? and bibliography_idbibliographyID=?");
+		userfavorite.setInt(1, userID);
+		userfavorite.setString(2, bookID);
+		userfavorite.setInt(3, pageNum);
+		userfavorite.setInt(4, bibID);
+		ResultSet rs = userfavorite.executeQuery();
+		if (!rs.next())
+			return false;
+
+		return true;
+
+	}
+
+/**
+ * 
+ * @param con - connection to server
+ * @param searchDate - relevant date to return number of searches
+ * @return number of searches performed in a requested week according to date
+ * @throws SQLException
+ */
+	
+	public ArrayList<SearchNum> getSearchNumber(java.sql.Connection con, Date searchDate) throws SQLException {
+		ArrayList<SearchNum> searches = new ArrayList<SearchNum>();
+		PreparedStatement stmt = con.prepareStatement("SELECT searchDate,count(basicSearchID) FROM libArabDB.search where searchDate between ? and DATE_ADD(?,INTERVAL 1 WEEK) Group By WEEK(searchDate)");
+		stmt.setDate(1, searchDate);
+		stmt.setDate(2, searchDate);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+		searches.add(new SearchNum(rs.getDate(1), rs.getInt(2)));
+		}
+		return searches;
+		}
+	
+/**
+ * 
+ * @param con - connection to server
+ * @param userID - user's ID
+ * @param type - type of resource
+ * @param BibId - bibliography ID
+ * @return all favorites in a certain bibliography  of a given user
+ * @throws SQLException
+ */
+	
+	public ArrayList<Favorite> getfavOfBib(java.sql.Connection con, String userID,TypeOfResource type, int BibId) throws SQLException {
+		ArrayList<Favorite> allFavOfBib = new ArrayList<>();
+		SelectCommand sc = new SelectCommand();
+
+		Integer thisUserID = sc.returnUserByUsername(con, userID).getUserID();
+             
+		PreparedStatement getBibStatement = con.prepareStatement(
+				"select bookID ,pageLink , pageNumber , description" + " from libArabDB.favorite"
+						+ " where libArabDB.favorite.userID = ? AND bibliography_idbibliographyID = ?"
+						+ " AND libArabDB.favorite.type = ?"
+						+ " order by bookID , pageNumber ");
+		getBibStatement.setInt(1, thisUserID);
+		getBibStatement.setInt(2, BibId);
+		getBibStatement.setString(3,type.name());
+
+		ResultSet rs = getBibStatement.executeQuery();
+
+		while (rs.next()) {
+
+			
+			Favorite favResult = new Favorite ( rs.getString("bookID"),rs.getString("pageLink"),
+				rs.getString("description" ),rs.getInt("pageNumber"));
+			                                
+			allFavOfBib.add(favResult);
+		}
+		return allFavOfBib;
+
+	}
 
 }
 
