@@ -388,7 +388,8 @@ public class UpdateCommand extends SQLCommand {
  * @throws SQLException
  */
 	public boolean addFavorite(java.sql.Connection con, String username, String bookID, TypeOfResource type,
-			String pageLink, int pageNum, String desc, int bibID) throws SQLException {
+			String pageLink, int pageNum, String desc, int bibID, String title, String author, String publisher,
+			String creationDate, String other, String source) throws SQLException {
 
 		SelectCommand helper = new SelectCommand();
 		int userID = helper.returnUserByUsername(con, username).getUserID();
@@ -397,8 +398,9 @@ public class UpdateCommand extends SQLCommand {
 			pageNum = 1;
 		}
 		String insert = "INSERT INTO libArabDB.favorite (userID,bookID,type,pageLink,pageNumber,"
-				+ "description, bibliography_idbibliographyID) VALUES ('" + userID + "', '" + bookID + "', " + "'"
-				+ type + "', '" + pageLink + "', '" + pageNum + "', '" + desc + "', '" + bibID + "')";
+				+ "description, bibliography_idbibliographyID, title, author, publisher, creationDate, other, source) VALUES ('" + userID + "', '" + bookID + "', " + "'"
+				+ type + "', '" + pageLink + "', '" + pageNum + "', '" + desc + "', '" + bibID + "', '"+ title + "', '"+
+				author+"', '"+publisher+"', '"+creationDate+"', '"+other+"', '"+source+"')";
 
 		stmt.executeUpdate(insert);
 

@@ -374,7 +374,7 @@ public class SelectCommand extends SQLCommand {
 		ArrayList<Question> result = new ArrayList<Question>();
 		java.sql.Statement statement = con.createStatement();
 		this.query = "SELECT * FROM libArabDB.question where question.questionItemID = "
-				+ questionItemID;
+				+ "\""+questionItemID+"\"";
 		ResultSet rs = statement.executeQuery(this.query);
 		while (rs.next()) {
 			Question newQuestion = new Question(rs.getInt("addQuestionUserID"),
@@ -1078,7 +1078,7 @@ return false;
 	
 	public ArrayList<SearchNum> getSearchNumber(java.sql.Connection con, Date searchDate) throws SQLException {
 		ArrayList<SearchNum> searches = new ArrayList<SearchNum>();
-		PreparedStatement stmt = con.prepareStatement("SELECT searchDate,count(basicSearchID) FROM libArabDB.search where searchDate between ? and DATE_ADD(?,INTERVAL 1 WEEK) Group By WEEK(searchDate)");
+		PreparedStatement stmt = con.prepareStatement("SELECT searchDate,count(basicSearchID) FROM libArabDB.search where searchDate between ? and DATE_ADD(?,INTERVAL 1 WEEK) Group By searchDate");
 		stmt.setDate(1, searchDate);
 		stmt.setDate(2, searchDate);
 		ResultSet rs = stmt.executeQuery();
@@ -1099,13 +1099,13 @@ return false;
  */
 	
 	public ArrayList<Favorite> getfavOfBib(java.sql.Connection con, String userID,TypeOfResource type, int BibId) throws SQLException {
-		ArrayList<Favorite> allFavOfBib = new ArrayList<>();
+		ArrayList<Favorite> allFavOfBib = new ArrayList<Favorite>();
 		SelectCommand sc = new SelectCommand();
 
 		Integer thisUserID = sc.returnUserByUsername(con, userID).getUserID();
              
 		PreparedStatement getBibStatement = con.prepareStatement(
-				"select bookID ,pageLink , pageNumber , description" + " from libArabDB.favorite"
+				"select bookID ,pageLink , pageNumber , description, title, author, publisher, creationDate, other, source" + " from libArabDB.favorite"
 						+ " where libArabDB.favorite.userID = ? AND bibliography_idbibliographyID = ?"
 						+ " AND libArabDB.favorite.type = ?"
 						+ " order by bookID , pageNumber ");
@@ -1119,7 +1119,8 @@ return false;
 
 			
 			Favorite favResult = new Favorite ( rs.getString("bookID"),rs.getString("pageLink"),
-				rs.getString("description" ),rs.getInt("pageNumber"));
+				rs.getString("description" ),rs.getInt("pageNumber"),rs.getString("title"),rs.getString("author"),
+				rs.getString("publisher"), rs.getString("creationDate"), rs.getString("other"), rs.getString("source"));
 			                                
 			allFavOfBib.add(favResult);
 		}
