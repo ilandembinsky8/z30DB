@@ -56,7 +56,8 @@ public class ConnectivityTest {
 //		java.util.Date date = ft.parse(input);
 //		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		
-//		UpdateCommand a = new UpdateCommand();
+	UpdateCommand a = new UpdateCommand();
+	SelectCommand SC=new SelectCommand();
 //		a.addFavorite(con, "dror@d" , "NNL_ALEPH000400204", TypeOfResource.BOOK, "http://iiif.nli.org.il/IIIF/FL31351509/full/full/0/default.jpg",
 //				18, "This is the Story of Prince Of Bel-Air", 0, "بلغة يونيكود", "بلغة يونيكود", "بلغة يونيكود", "2015-10-10", "bla bla","the source");
 		ArrayList<Favorite> answers = b.getfavOfBib(con,"cat@root",  TypeOfResource.BOOK, 787);
@@ -64,6 +65,14 @@ public class ConnectivityTest {
 		for (Favorite g: answers){
 			System.out.println(g.getBookID()+", "+ g.getDescription()+",  "+g.getSource());
 		}
-			
+			System.out.println("Diiiiiiid question was added?");
+		//	boolean addQ = a.addQuestion(con, "diababeer3@gmail.com", "questuion", "answer1", "answer2", "answer3", "answer4", "123", "author", "history", "Mr who", "10/03/1995","aaaaa");
+		//	System.out.println(addQ);
+		
+			ArrayList<Item> items =	SC.returnItemsOfQuestions(con);
+			for (Item myI : items)
+			{
+				System.out.println(myI);
+			}
 	}
 }

@@ -278,7 +278,7 @@ public class UpdateCommand extends SQLCommand {
  */
 	public boolean addQuestion(java.sql.Connection con, String username, String question, String correctAnswer,
 			String wrongAnswer1, String wrongAnswer2, String wrongAnswer3, String questionItemID, String authorName,
-			String itemName) throws SQLException {
+			String itemName , String Publisher , String CreationDate , String UrlImage) throws SQLException {
 		if ((username == null) || (question == null) || (correctAnswer == null) || (wrongAnswer1 == null)
 				|| (wrongAnswer2 == null) || (wrongAnswer3 == null) || (questionItemID == null))
 			return false;
@@ -292,9 +292,10 @@ public class UpdateCommand extends SQLCommand {
 			else
 				return false;
 			String insertQuestion = "INSERT INTO libArabDB.question (addQuestionUserID, question, correctAnswer, wrongAnswer1,"
-					+ "wrongAnswer2, wrongAnswer3, questionItemID, authorName, itemName) VALUES(" + userID + ", '"
+					+ "wrongAnswer2, wrongAnswer3, questionItemID, authorName, itemName , Publisher , CreationDate ,UrlImage) VALUES(" + userID + ", '"
 					+ question + "', '" + correctAnswer + "', '" + wrongAnswer1 + "', '" + wrongAnswer2 + "', '"
-					+ wrongAnswer3 + "', '" + questionItemID + "', '" + authorName + "', '" + itemName + "')";
+					+ wrongAnswer3 + "', '" + questionItemID + "', '" + authorName + "', '" + itemName + "', '" + Publisher + "'"
+							+ ", '" + CreationDate + "', '" + UrlImage + "')";
 
 			stmt.executeUpdate(insertQuestion);
 

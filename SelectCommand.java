@@ -402,7 +402,9 @@ public class SelectCommand extends SQLCommand {
 		this.query = "SELECT * FROM libArabDB.question group by itemName";
 		ResultSet rs = statement.executeQuery(this.query);
 		while (rs.next()) {
-			result.add(new Item(rs.getString("itemName"), rs.getString("authorName")));
+			result.add(new Item(rs.getString("itemName"),rs.getString("questionItemID"),
+					rs.getString("authorName"), rs.getString("Publisher"), rs.getString("CreationDate"),
+							rs.getString("UrlImage")));
 		}
 		return result;
 	}
